@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ADMINS = (
+    ('haksung', 'hacksungeeda@gmail.com')
+)
+MANAGERS = ADMINS
 
 # Application definition
 
@@ -37,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'events',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -55,7 +60,7 @@ ROOT_URLCONF = 'startthedark.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,10 +82,15 @@ WSGI_APPLICATION = 'startthedark.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'dev.db'),
     }
 }
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = 'http://localhost:8000/media/admin/'
+LOGIN_REDIRECT_URL = '/events/archive'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
