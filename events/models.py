@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
 
 class Event(models.Model):
     description = models.TextField()
@@ -14,8 +15,12 @@ class Event(models.Model):
         return self.description
 
     def save(self, **kwargs):
-        Event.objects.today().filter(latest=True,
-            creator=self.creator).update(latest=False)
+        now = datetime.now()
+        start = datetime.min.replace(year=now.year, month=now.month,
+                                     day=now.day)
+        end = (start + timedelta(days=1)) - timedelta.resolution
+        Event.objects.filter(latest=True, creator=self.creator).filter(
+            creation_date__range=(start, end)).update(latest=False)
         super(Event, self).save(**kwargs)
 
 class Attendance(models.Model):
@@ -25,6 +30,6 @@ class Attendance(models.Model):
 
     def __unicode__(self):
         return "%s is attendin %s" % (self.user.username, self.event)
-        
 
-    
+    class Meta(object):
+        verbose_name_plural = "Attendance"
