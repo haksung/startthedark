@@ -16,19 +16,25 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def tonight(request):
     events = Event.objects.today().filter(latest=True)
-    attending = []
-    for event in events:
-        try:
-            Attendance.objects.get(event=event, user=request.user)
-            attending.append(True)
-        except Attendance.DoesNotExist:
-            attending.append(False)
     context = {
-        'events': zip(events, attending),
+        'events': events,
     }
 
     return render_to_response(
         'events/tonight.html',
+        context,
+        context_instance = RequestContext(request),
+    )
+
+@login_required
+def archive(request):
+    events = Event.objects.filter(latest=True)
+    context = {
+        'events': events,
+    }
+
+    return render_to_response(
+        'events/archive.html',
         context,
         context_instance = RequestContext(request),
     )
