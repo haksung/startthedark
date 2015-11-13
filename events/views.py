@@ -66,8 +66,6 @@ def create(request):
         context_instance = RequestContext(request)
     )
 
-create = login_required(create)
-
 @login_required
 def toggle_attendance(request):
     try:
@@ -88,4 +86,3 @@ def toggle_attendance(request):
     if not next:
         next = request.META['HTTP_REFERER']
     return HttpResponseRedirect(next)
-toggle_attendance = login_required(toggle_attendance)
